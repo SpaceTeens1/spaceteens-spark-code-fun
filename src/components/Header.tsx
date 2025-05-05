@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Globe, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -50,6 +51,14 @@ const Header = () => {
                     </a>
                   </li>
                 ))}
+                <li>
+                  <Link 
+                    to="/admin/login" 
+                    className="text-gray-700 hover:text-spaceteens-orange font-semibold transition-colors duration-300"
+                  >
+                    Admin
+                  </Link>
+                </li>
               </ul>
             </nav>
 
@@ -98,6 +107,15 @@ const Header = () => {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link 
+                  to="/admin/login" 
+                  className="block text-gray-700 hover:text-spaceteens-orange font-semibold transition-colors duration-300"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Admin
+                </Link>
+              </li>
               <li>
                 <Button 
                   className="w-full bg-spaceteens-orange hover:bg-orange-600 transition-colors duration-300"

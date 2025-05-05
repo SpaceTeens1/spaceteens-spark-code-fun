@@ -14,11 +14,11 @@ const MissionSection = () => {
               <div className="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-spaceteens-teal/10 z-0"></div>
               <div className="absolute bottom-10 -right-10 w-32 h-32 rounded-full bg-spaceteens-orange/10 z-0"></div>
               
-              {/* Main image */}
+              {/* Main image - Updated to show children playing with robots */}
               <div className="relative z-10 rounded-lg overflow-hidden shadow-xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1485833077593-4278bba3f11f?auto=format&fit=crop&q=80&w=600"
-                  alt="Children learning robotics" 
+                  src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=600"
+                  alt="Children playing with robots" 
                   className="w-full"
                 />
               </div>

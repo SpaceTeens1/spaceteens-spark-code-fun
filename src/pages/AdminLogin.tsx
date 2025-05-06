@@ -13,7 +13,7 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn, isAdmin, profile } = useAuth();
+  const { signIn, signOut, isAdmin, profile } = useAuth();
 
   useEffect(() => {
     // If user is already logged in and is an admin, redirect to dashboard

@@ -1,26 +1,20 @@
 
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
-const AdminLogin = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn, isAdmin, profile } = useAuth();
-
-  useEffect(() => {
-    // If user is already logged in and is an admin, redirect to dashboard
-    if (profile && isAdmin()) {
-      navigate('/admin');
-    }
-  }, [profile, navigate, isAdmin]);
+  const { signIn } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,28 +29,13 @@ const AdminLogin = () => {
         variant: "destructive"
       });
       setIsLoading(false);
-      return;
+    } else {
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
+      navigate('/dashboard');
     }
-    
-    // We need to wait for the profile to be loaded
-    setTimeout(async () => {
-      if (profile && isAdmin()) {
-        toast({
-          title: "Login successful",
-          description: "Welcome to the admin dashboard",
-        });
-        navigate('/admin');
-      } else {
-        toast({
-          title: "Access denied",
-          description: "You don't have administrator privileges",
-          variant: "destructive"
-        });
-        // Sign out since they're not an admin
-        await signOut();
-      }
-      setIsLoading(false);
-    }, 1000);
   };
 
   return (
@@ -68,35 +47,36 @@ const AdminLogin = () => {
             alt="Spaceteens Academy Logo" 
             className="w-32 mx-auto mb-4"
           />
-          <h1 className="text-3xl font-bold text-spaceteens-blue">Admin Login</h1>
-          <p className="text-gray-600 mt-2">Enter your credentials to access the admin area</p>
+          <h1 className="text-3xl font-bold text-spaceteens-blue">Student Login</h1>
+          <p className="text-gray-600 mt-2">Sign in to access your courses and learning materials</p>
         </div>
         
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle>Login</CardTitle>
-            <CardDescription>Manage your courses, students, and more</CardDescription>
+            <CardDescription>Enter your credentials to access your account</CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin}>
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@example.com"
+                  placeholder="your.email@example.com"
                   required
                 />
               </div>
               
               <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  <Link to="/reset-password" className="text-xs text-spaceteens-blue hover:underline">
+                    Forgot password?
+                  </Link>
+                </div>
                 <Input
                   id="password"
                   type="password"
@@ -106,27 +86,33 @@ const AdminLogin = () => {
                   required
                 />
               </div>
-            </form>
-          </CardContent>
-          <CardFooter>
-            <Button 
-              className="w-full bg-spaceteens-orange hover:bg-orange-600"
-              onClick={handleLogin}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Logging in...' : 'Login'}
-            </Button>
-          </CardFooter>
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-4">
+              <Button 
+                type="submit"
+                className="w-full bg-spaceteens-blue hover:bg-blue-700"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </Button>
+              <p className="text-center text-sm">
+                Don't have an account?{' '}
+                <Link to="/signup" className="text-spaceteens-blue hover:underline font-medium">
+                  Sign up
+                </Link>
+              </p>
+            </CardFooter>
+          </form>
         </Card>
         
         <div className="mt-6 text-center">
-          <a href="/" className="text-spaceteens-blue hover:underline">
-            ← Back to website
-          </a>
+          <Link to="/" className="text-spaceteens-blue hover:underline">
+            ← Back to home
+          </Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminLogin;
+export default Login;

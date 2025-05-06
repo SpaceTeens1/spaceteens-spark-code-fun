@@ -6,22 +6,42 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminCourses from '@/components/admin/AdminCourses';
 import AdminLessons from '@/components/admin/AdminLessons';
 import AdminMaterials from '@/components/admin/AdminMaterials';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/components/ui/use-toast';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { user, profile, isAdmin, signOut } = useAuth();
+  const { toast } = useToast();
 
-  // Check if user is authenticated
+  // Check if user is authenticated and is an admin
   useEffect(() => {
-    const isAuthenticated = sessionStorage.getItem('adminAuthenticated') === 'true';
-    if (!isAuthenticated) {
+    if (!user) {
       navigate('/admin/login');
+      return;
     }
-  }, [navigate]);
+    
+    // Check if profile is loaded and user is admin
+    if (profile && !isAdmin()) {
+      toast({
+        title: "Access denied",
+        description: "You don't have administrator privileges",
+        variant: "destructive"
+      });
+      navigate('/');
+    }
+  }, [user, profile, navigate, isAdmin, toast]);
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('adminAuthenticated');
-    navigate('/admin/login');
+  const handleLogout = async () => {
+    await signOut();
+    toast({
+      title: "Logged out",
+      description: "You have been logged out successfully",
+    });
+    navigate('/');
   };
+
+  if (!user || !profile || !isAdmin()) return null;
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -36,6 +56,9 @@ const AdminDashboard = () => {
             <h1 className="text-xl font-semibold text-spaceteens-blue">Spaceteens Admin Dashboard</h1>
           </div>
           <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 mr-2">
+              Signed in as {profile.first_name} {profile.last_name}
+            </span>
             <Link to="/">
               <Button variant="outline" size="sm">View Website</Button>
             </Link>

@@ -6,8 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
-import { FileUploader } from '@/components/admin/FileUploader';
-import { QuizBuilder } from '@/components/admin/QuizBuilder';
+import FileUploader from '@/components/admin/FileUploader';
+import QuizBuilder from '@/components/admin/QuizBuilder';
 import { supabase } from '@/integrations/supabase/client';
 import { FileText, Video, File } from 'lucide-react';
 

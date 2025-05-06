@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('spaceteens.eg@gmail.com');
-  const [password, setPassword] = useState('1234');
+  const [password, setPassword] = useState('spaceteens123');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();

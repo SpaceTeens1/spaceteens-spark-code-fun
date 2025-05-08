@@ -53,7 +53,7 @@ console.log(user)
         {/* Admin Header */}
         <header className="bg-white shadow-sm h-16 flex items-center justify-between px-6">
           <div>
-            <h1 className="text-xl font-semibold text-spaceteens-blue">Spaceteens Admin Dashboard</h1>
+            <h1 className="text-xl font-semibold text-spaceteens-blue">Spaceteens Admingt Dashboard</h1>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-600 mr-2">

@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, profile, isAdmin, signOut } = useAuth();
   const { toast } = useToast();
-
+console.log(user)
   // Check if user is authenticated and is an admin
   useEffect(() => {
     if (!user) {

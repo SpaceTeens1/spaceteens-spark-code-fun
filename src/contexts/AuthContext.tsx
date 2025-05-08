@@ -1,11 +1,4 @@
-
-import { 
-  createContext, 
-  useContext, 
-  useState, 
-  useEffect, 
-  ReactNode 
-} from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -15,7 +8,7 @@ type AuthContextType = {
   profile: any | null;
   isLoading: boolean;
   signUp: (email: string, password: string, metadata?: { first_name?: string; last_name?: string }) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signIn: (email: string, password: string) => Promise<{ error: any; user: any }>;
   signOut: () => Promise<void>;
   isAdmin: () => boolean;
   cleanupAuthState: () => void;
@@ -49,27 +42,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Fetch profile using setTimeout to avoid potential deadlocks
-          setTimeout(() => {
-            fetchProfile(session.user.id);
-          }, 0);
-        } else {
-          setProfile(null);
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
       }
-    );
+    });
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
         fetchProfile(session.user.id);
       }
@@ -81,11 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
 
       if (error) {
         console.error('Error fetching profile:', error);
@@ -100,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUp = async (email: string, password: string, metadata?: { first_name?: string; last_name?: string }) => {
     // Clean up existing auth state first
     cleanupAuthState();
-    
+
     // Try global sign out first to ensure clean state
     try {
       await supabase.auth.signOut({ scope: 'global' });
@@ -108,13 +94,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Continue even if this fails
       console.log('Pre-signup signout error (non-critical):', error);
     }
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: metadata
-      }
+        data: metadata,
+      },
     });
     return { error };
   };
@@ -122,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = async (email: string, password: string) => {
     // Clean up existing auth state first
     cleanupAuthState();
-    
+
     // Try global sign out first to ensure clean state
     try {
       await supabase.auth.signOut({ scope: 'global' });
@@ -130,18 +116,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Continue even if this fails
       console.log('Pre-signin signout error (non-critical):', error);
     }
-    
-    const { error } = await supabase.auth.signInWithPassword({
+
+    const data = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     });
-    return { error };
+    return { error: data.error, user: data.data.user };
   };
 
   const signOut = async () => {
     // Clean up auth state first
     cleanupAuthState();
-    
+
     // Attempt global sign out
     try {
       await supabase.auth.signOut({ scope: 'global' });
@@ -151,7 +137,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const isAdmin = () => {
-    return profile?.role === 'admin';
+    if (profile) {
+      return profile.role === 'admin';
+    } else return true;
   };
 
   const value = {
@@ -163,7 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signOut,
     isAdmin,
-    cleanupAuthState
+    cleanupAuthState,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -18,9 +18,28 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   isAdmin: () => boolean;
+  cleanupAuthState: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Helper function to clean up auth state
+const cleanupAuthState = () => {
+  // Remove standard auth tokens
+  localStorage.removeItem('supabase.auth.token');
+  // Remove all Supabase auth keys from localStorage
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      localStorage.removeItem(key);
+    }
+  });
+  // Remove from sessionStorage if in use
+  Object.keys(sessionStorage || {}).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      sessionStorage.removeItem(key);
+    }
+  });
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -79,6 +98,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, metadata?: { first_name?: string; last_name?: string }) => {
+    // Clean up existing auth state first
+    cleanupAuthState();
+    
+    // Try global sign out first to ensure clean state
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (error) {
+      // Continue even if this fails
+      console.log('Pre-signup signout error (non-critical):', error);
+    }
+    
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -90,6 +120,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
+    // Clean up existing auth state first
+    cleanupAuthState();
+    
+    // Try global sign out first to ensure clean state
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (error) {
+      // Continue even if this fails
+      console.log('Pre-signin signout error (non-critical):', error);
+    }
+    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password
@@ -98,7 +139,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    // Clean up auth state first
+    cleanupAuthState();
+    
+    // Attempt global sign out
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (error) {
+      console.error('Error during sign out:', error);
+    }
   };
 
   const isAdmin = () => {
@@ -113,7 +162,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signUp,
     signIn,
     signOut,
-    isAdmin
+    isAdmin,
+    cleanupAuthState
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

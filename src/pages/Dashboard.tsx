@@ -23,7 +23,8 @@ const Dashboard = () => {
       title: "Logged out",
       description: "You have been logged out successfully",
     });
-    navigate('/');
+    // Force page reload for a clean state
+    window.location.href = '/';
   };
 
   if (!user || !profile) return null;

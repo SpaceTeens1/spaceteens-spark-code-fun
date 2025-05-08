@@ -13,18 +13,28 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn, signOut, isAdmin, profile } = useAuth();
+  const { signIn, signOut, isAdmin, profile, cleanupAuthState } = useAuth();
 
   useEffect(() => {
+    // Clean up any existing auth state on component mount
+    cleanupAuthState();
+    
     // If user is already logged in and is an admin, redirect to dashboard
     if (profile && isAdmin()) {
       navigate('/admin');
     }
-  }, [profile, navigate, isAdmin]);
+  }, [profile, navigate, isAdmin, cleanupAuthState]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // First attempt to sign out to clear any existing sessions
+    try {
+      await signOut();
+    } catch (error) {
+      console.log('Pre-login signout error (non-critical):', error);
+    }
 
     const { error } = await signIn(email, password);
     

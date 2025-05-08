@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -20,15 +21,31 @@ const AdminDashboard = () => {
       return;
     }
     
-    // Check if profile is loaded and user is admin
-    if (profile && !isAdmin()) {
-      toast({
-        title: "Access denied",
-        description: "You don't have administrator privileges",
-        variant: "destructive"
-      });
-      navigate('/');
-    }
+    // Add a small delay to make sure profile is loaded
+    const checkAdminStatus = setTimeout(() => {
+      // Check if profile is loaded and user is admin
+      if (profile) {
+        console.log("Dashboard profile loaded:", profile);
+        console.log("Dashboard is admin:", isAdmin());
+        
+        if (!isAdmin()) {
+          toast({
+            title: "Access denied",
+            description: "You don't have administrator privileges",
+            variant: "destructive"
+          });
+          navigate('/');
+        }
+      } else {
+        // Profile not loaded yet, try again
+        toast({
+          title: "Loading profile",
+          description: "Please wait while we load your profile...",
+        });
+      }
+    }, 500);
+    
+    return () => clearTimeout(checkAdminStatus);
   }, [user, profile, navigate, isAdmin, toast]);
 
   const handleLogout = async () => {
@@ -41,7 +58,17 @@ const AdminDashboard = () => {
     window.location.href = '/';
   };
 
-  if (!user || !profile || !isAdmin()) return null;
+  // Don't render the dashboard until we're sure the user is an admin
+  if (!user || !profile || !isAdmin()) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-spaceteens-blue mb-2">Verifying admin access...</h2>
+          <p className="text-gray-600">Please wait while we verify your credentials.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">

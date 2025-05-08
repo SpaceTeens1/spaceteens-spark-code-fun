@@ -78,7 +78,7 @@ const AdminLogin = () => {
             alt="Spaceteens Academy Logo" 
             className="w-32 mx-auto mb-4"
           />
-          <h1 className="text-3xl font-bold text-spaceteens-blue">Admin Login</h1>
+          <h1 className="text-3xl font-bold text-spaceteens-blue">Adminz Login</h1>
           <p className="text-gray-600 mt-2">Enter your credentials to access the admin area</p>
         </div>
         

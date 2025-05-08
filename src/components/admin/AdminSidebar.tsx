@@ -1,6 +1,6 @@
 
 import { NavLink } from 'react-router-dom';
-import { BookOpen, Video, FileText, Home } from 'lucide-react';
+import { BookOpen, Video, FileText, Home, Users, FileQuestion } from 'lucide-react';
 
 const AdminSidebar = () => {
   // Navigation items
@@ -9,6 +9,8 @@ const AdminSidebar = () => {
     { icon: <BookOpen />, label: 'Courses', to: '/admin/courses' },
     { icon: <FileText />, label: 'Lessons', to: '/admin/lessons' },
     { icon: <Video />, label: 'Materials', to: '/admin/materials' },
+    { icon: <Users />, label: 'Users', to: '/admin/users' },
+    { icon: <FileText />, label: 'Quizzes', to: '/admin/quizzes' },
   ];
 
   return (

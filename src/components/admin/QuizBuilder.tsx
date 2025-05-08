@@ -6,16 +6,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 import { Clipboard, ClipboardPlus, ClipboardX } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 
 interface QuizQuestion {
   id: string;
   question: string;
   options: string[];
   correctAnswer: number;
+  explanation: string;
 }
 
 interface QuizData {
   id?: string;
+  lesson_id: string;
   title: string;
   description: string;
   questions: QuizQuestion[];
@@ -24,13 +27,15 @@ interface QuizData {
 interface QuizBuilderProps {
   initialQuiz?: QuizData;
   onSave: (quizData: QuizData) => void;
+  lessonTitle?: string;
 }
 
-const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
+const QuizBuilder = ({ initialQuiz, onSave, lessonTitle }: QuizBuilderProps) => {
   const { toast } = useToast();
   
   const [quiz, setQuiz] = useState<QuizData>(
     initialQuiz || {
+      lesson_id: '',
       title: '',
       description: '',
       questions: []
@@ -40,7 +45,8 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
   const [currentQuestion, setCurrentQuestion] = useState<Partial<QuizQuestion>>({
     question: '',
     options: ['', '', '', ''],
-    correctAnswer: 0
+    correctAnswer: 0,
+    explanation: ''
   });
   
   const [editingQuestionIndex, setEditingQuestionIndex] = useState<number | null>(null);
@@ -62,6 +68,10 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
   const handleCorrectAnswerChange = (index: number) => {
     setCurrentQuestion({ ...currentQuestion, correctAnswer: index });
   };
+
+  const handleExplanationChange = (value: string) => {
+    setCurrentQuestion({ ...currentQuestion, explanation: value });
+  };
   
   const addQuestion = () => {
     if (!currentQuestion.question || currentQuestion.options?.some(opt => !opt)) {
@@ -77,7 +87,8 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
       id: Math.random().toString(36).substring(2, 9),
       question: currentQuestion.question || '',
       options: currentQuestion.options || ['', '', '', ''],
-      correctAnswer: currentQuestion.correctAnswer || 0
+      correctAnswer: currentQuestion.correctAnswer || 0,
+      explanation: currentQuestion.explanation || ''
     };
     
     if (editingQuestionIndex !== null) {
@@ -92,7 +103,8 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
     setCurrentQuestion({
       question: '',
       options: ['', '', '', ''],
-      correctAnswer: 0
+      correctAnswer: 0,
+      explanation: ''
     });
     
     toast({
@@ -138,20 +150,21 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
     }
     
     onSave(quiz);
-    
-    toast({
-      title: "Quiz saved",
-      description: "Your quiz has been saved successfully"
-    });
   };
   
   return (
     <div className="space-y-6">
       <div className="space-y-4">
+        {lessonTitle && (
+          <div className="bg-blue-50 p-4 rounded-md">
+            <p className="font-medium">Creating quiz for lesson: <span className="text-spaceteens-blue">{lessonTitle}</span></p>
+          </div>
+        )}
+        
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <Label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
             Quiz Title
-          </label>
+          </Label>
           <Input
             id="title"
             value={quiz.title}
@@ -161,9 +174,9 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
         </div>
         
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <Label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
             Quiz Description
-          </label>
+          </Label>
           <Textarea
             id="description"
             value={quiz.description}
@@ -179,9 +192,9 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <Label className="block text-sm font-medium text-gray-700 mb-1">
               Question
-            </label>
+            </Label>
             <Textarea
               value={currentQuestion.question}
               onChange={(e) => handleQuestionChange(e.target.value)}
@@ -190,9 +203,9 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
           </div>
           
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <Label className="block text-sm font-medium text-gray-700">
               Options
-            </label>
+            </Label>
             {currentQuestion.options?.map((option, index) => (
               <div key={index} className="flex items-center gap-2">
                 <Input
@@ -210,6 +223,18 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
                 </Button>
               </div>
             ))}
+          </div>
+          
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-1">
+              Answer Explanation (shown after answering)
+            </Label>
+            <Textarea
+              value={currentQuestion.explanation}
+              onChange={(e) => handleExplanationChange(e.target.value)}
+              placeholder="Explain why the correct answer is right and/or why other options are wrong"
+              className="h-24"
+            />
           </div>
           
           <div className="flex justify-end">
@@ -250,7 +275,7 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
                   </div>
                 </div>
                 <p className="mb-2">{q.question}</p>
-                <div className="space-y-1 ml-4">
+                <div className="space-y-1 ml-4 mb-3">
                   {q.options.map((opt, optIndex) => (
                     <div key={optIndex} className="flex gap-2 items-center">
                       <div
@@ -262,6 +287,12 @@ const QuizBuilder = ({ initialQuiz, onSave }: QuizBuilderProps) => {
                     </div>
                   ))}
                 </div>
+                {q.explanation && (
+                  <div className="mt-2 bg-gray-50 p-3 rounded-md">
+                    <h5 className="text-sm font-medium text-gray-700">Explanation:</h5>
+                    <p className="text-sm text-gray-600 mt-1">{q.explanation}</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}

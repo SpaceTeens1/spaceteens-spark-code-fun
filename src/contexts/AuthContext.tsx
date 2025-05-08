@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,6 +12,7 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<{ error: any; user: any }>;
   signOut: () => Promise<void>;
   isAdmin: () => boolean;
+  isSuperAdmin: () => boolean;
   cleanupAuthState: () => void;
 };
 
@@ -75,11 +77,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         console.error('Error fetching profile:', error);
+        setProfile(null);
+        setIsLoading(false);
       } else {
         setProfile(data);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
+      setProfile(null);
+      setIsLoading(false);
     }
   };
 
@@ -139,7 +146,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = () => {
     if (profile) {
       return profile.role === 'admin';
-    } else return true;
+    }
+    return false;
+  };
+
+  const isSuperAdmin = () => {
+    if (profile) {
+      return profile.is_super_admin === true;
+    }
+    return false;
   };
 
   const value = {
@@ -151,6 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signOut,
     isAdmin,
+    isSuperAdmin,
     cleanupAuthState,
   };
 

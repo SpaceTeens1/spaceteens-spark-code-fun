@@ -50,46 +50,20 @@ const AdminLogin = () => {
     
     // We need to wait for the profile to be loaded
     setTimeout(async () => {
-      // Check if profile is loaded and user is admin
-      if (profile) {
-        console.log("Profile loaded:", profile);
-        console.log("Is admin check:", isAdmin());
-        
-        if (isAdmin()) {
-          toast({
-            title: "Login successful",
-            description: "Welcome to the admin dashboard",
-          });
-          navigate('/admin');
-        } else {
-          toast({
-            title: "Access denied",
-            description: "You don't have administrator privileges",
-            variant: "destructive"
-          });
-          // Sign out since they're not an admin
-          await signOut();
-        }
+      if (profile && isAdmin()) {
+        toast({
+          title: "Login successful",
+          description: "Welcome to the admin dashboard",
+        });
+        navigate('/admin');
       } else {
-        // If profile is not loaded yet, wait a bit longer
-        setTimeout(async () => {
-          if (profile && isAdmin()) {
-            toast({
-              title: "Login successful",
-              description: "Welcome to the admin dashboard",
-            });
-            navigate('/admin');
-          } else {
-            toast({
-              title: "Access denied",
-              description: "You don't have administrator privileges",
-              variant: "destructive"
-            });
-            // Sign out since they're not an admin
-            await signOut();
-          }
-          setIsLoading(false);
-        }, 2000);
+        toast({
+          title: "Access denied",
+          description: "You don't have administrator privileges",
+          variant: "destructive"
+        });
+        // Sign out since they're not an admin
+        await signOut();
       }
       setIsLoading(false);
     }, 1000);

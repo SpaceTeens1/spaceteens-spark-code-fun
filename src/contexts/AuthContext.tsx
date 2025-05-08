@@ -18,7 +18,6 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   isAdmin: () => boolean;
-  isSuperAdmin: () => boolean;
   cleanupAuthState: () => void;
 };
 
@@ -152,11 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const isAdmin = () => {
-    return profile?.role === 'admin' || profile?.is_super_admin === true;
-  };
-
-  const isSuperAdmin = () => {
-    return profile?.is_super_admin === true;
+    return profile?.role === 'admin';
   };
 
   const value = {
@@ -168,7 +163,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signOut,
     isAdmin,
-    isSuperAdmin,
     cleanupAuthState
   };
 

@@ -47,7 +47,8 @@ const AdminLogin = () => {
       setIsLoading(false);
       return;
     }
-    
+    console.log(profile)
+    console.log(isAdmin)
     // We need to wait for the profile to be loaded
     setTimeout(async () => {
       if (profile && isAdmin()) {

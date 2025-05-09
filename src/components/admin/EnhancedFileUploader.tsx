@@ -81,21 +81,30 @@ const EnhancedFileUploader = ({
       // Determine file type category
       const fileType = getFileType(selectedFile.type);
       
+      // Set up a progress tracker
+      let lastProgressUpdate = 0;
+      const progressInterval = setInterval(() => {
+        lastProgressUpdate += 10;
+        if (lastProgressUpdate <= 90) {
+          setUploadProgress(lastProgressUpdate);
+        }
+      }, 300);
+      
       // Upload file to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from(bucketName)
         .upload(filePath, selectedFile, {
           cacheControl: '3600',
           upsert: false,
-          onUploadProgress: (progress) => {
-            const percent = (progress.loaded / progress.total) * 100;
-            setUploadProgress(Math.floor(percent));
-          }
         });
         
+      clearInterval(progressInterval);
+      
       if (uploadError) {
         throw uploadError;
       }
+      
+      setUploadProgress(100);
       
       // Get the public URL
       const { data } = supabase.storage

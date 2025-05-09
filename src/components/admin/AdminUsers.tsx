@@ -18,6 +18,7 @@ interface User {
   last_name: string;
   role: string;
   is_super_admin: boolean;
+  created_at?: string;
 }
 
 const AdminUsers = () => {
@@ -46,7 +47,14 @@ const AdminUsers = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setUsers(data || []);
+      
+      // Ensure is_super_admin property exists on each user
+      const processedUsers = (data || []).map(user => ({
+        ...user,
+        is_super_admin: user.is_super_admin || false
+      })) as User[];
+      
+      setUsers(processedUsers);
     } catch (error: any) {
       toast({
         title: 'Error fetching users',

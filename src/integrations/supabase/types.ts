@@ -130,6 +130,41 @@ export type Database = {
         }
         Relationships: []
       }
+      quizzes: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          lesson_id: string
+          questions: Json
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          lesson_id: string
+          questions?: Json
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          lesson_id?: string
+          questions?: Json
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

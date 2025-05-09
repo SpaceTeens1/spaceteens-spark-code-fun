@@ -69,9 +69,9 @@ const AdminQuizzes = () => {
         const parsedQuizzes = quizzesData?.map(quiz => ({
           ...quiz,
           questions: typeof quiz.questions === 'string' 
-            ? JSON.parse(quiz.questions) 
+            ? JSON.parse(quiz.questions as string) 
             : quiz.questions
-        }));
+        })) as Quiz[];
         
         setQuizzes(parsedQuizzes || []);
         
@@ -87,7 +87,7 @@ const AdminQuizzes = () => {
     };
     
     fetchData();
-  }, []);
+  }, [toast]);
 
   const handleCreateQuiz = () => {
     if (!selectedLesson) {
@@ -190,18 +190,20 @@ const AdminQuizzes = () => {
           
         if (error) throw error;
         
-        const newQuiz = {
-          ...data[0],
-          questions: quizData.questions
-        };
-        
         // Add to local state
-        setQuizzes([newQuiz, ...quizzes]);
-        
-        toast({
-          title: "Quiz created",
-          description: "Your quiz has been created successfully"
-        });
+        if (data && data.length > 0) {
+          const newQuiz = {
+            ...data[0],
+            questions: quizData.questions
+          } as Quiz;
+          
+          setQuizzes([newQuiz, ...quizzes]);
+          
+          toast({
+            title: "Quiz created",
+            description: "Your quiz has been created successfully"
+          });
+        }
       }
       
       setIsQuizDialogOpen(false);

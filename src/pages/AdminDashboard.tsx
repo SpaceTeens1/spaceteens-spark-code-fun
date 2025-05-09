@@ -66,9 +66,11 @@ const AdminDashboard = () => {
             <h1 className="text-xl font-semibold text-spaceteens-blue">Spaceteens Admin Dashboard</h1>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 mr-2">
-              Signed in as {profile.first_name} {profile.last_name}
-            </span>
+            {profile && (
+              <span className="text-sm text-gray-600 mr-2">
+                Signed in as {profile.first_name || 'Admin'} {profile.last_name || ''}
+              </span>
+            )}
             <Link to="/">
               <Button
                 variant="outline"

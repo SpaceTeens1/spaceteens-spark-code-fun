@@ -254,7 +254,9 @@ const AdminQuizzes = () => {
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem value="" disabled>No lessons available</SelectItem>
+                  <div className="px-2 py-2 text-sm text-gray-500">
+                    No lessons available
+                  </div>
                 )}
               </SelectContent>
             </Select>

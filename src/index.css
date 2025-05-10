@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&family=Pacifico&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -16,16 +16,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 24 96% 53%;
+    --primary: 16 81% 54%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 217 91% 60%;
+    --secondary: 210 100% 42%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 195 85% 41%;
+    --accent: 181 100% 40%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -35,7 +35,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 1rem;
+    --radius: 1.5rem;
   }
 
   .dark {
@@ -48,16 +48,16 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 24 96% 53%;
+    --primary: 16 81% 54%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217 91% 60%;
+    --secondary: 210 100% 42%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 195 85% 41%;
+    --accent: 181 100% 40%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -92,5 +92,44 @@
 }
 
 .section-subtitle {
-  @apply text-xl md:text-2xl font-semibold text-spaceteens-teal mb-12 text-center max-w-3xl mx-auto;
+  @apply text-xl md:text-2xl font-semibold text-spaceteens-lightblue mb-12 text-center max-w-3xl mx-auto;
+}
+
+/* Fun card styles */
+.fun-card {
+  @apply relative overflow-hidden rounded-3xl transition-all duration-300 hover:shadow-lg border-2;
+}
+
+.fun-card:hover {
+  @apply -translate-y-2;
+}
+
+.fun-card::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-spaceteens-orange/10 to-spaceteens-teal/10 opacity-0 transition-opacity duration-300;
+}
+
+.fun-card:hover::before {
+  @apply opacity-100;
+}
+
+/* Fun button styles */
+.fun-button {
+  @apply relative overflow-hidden rounded-full px-8 py-3 font-bold text-white transition-all duration-300;
+  background: linear-gradient(90deg, var(--spaceteens-orange), var(--spaceteens-teal));
+  background-size: 200% auto;
+}
+
+.fun-button:hover {
+  background-position: right center;
+  @apply shadow-lg -translate-y-1;
+}
+
+/* Custom variables for easier access to the spaceteens colors */
+:root {
+  --spaceteens-orange: #EA5C2B;
+  --spaceteens-blue: #0A1931;
+  --spaceteens-teal: #00A8CC;
+  --spaceteens-lightblue: #1A6BBD;
+  --spaceteens-lightpink: #FFF6F6;
 }

@@ -53,13 +53,14 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Custom Spaceteens colors
+				// Custom Spaceteens colors - updated to match the image
 				spaceteens: {
-					orange: '#F97316',
-					blue: '#1E3A8A',
-					teal: '#33C3F0',
-					lightblue: '#D3E4FD',
-					yellow: '#FEF7CD'
+					orange: '#EA5C2B', // Top orange color
+					blue: '#0A1931',   // Dark blue color
+					teal: '#00A8CC',   // Teal color
+					lightblue: '#1A6BBD', // Medium blue color
+					yellow: '#FEF7CD',  // Keeping light yellow for contrast
+					lightpink: '#FFF6F6', // Light pink/peach color
 				}
 			},
 			borderRadius: {
@@ -91,13 +92,23 @@ export default {
 				'pulse-slow': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' }
+				},
+				'bounce-light': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-5px)' }
+				},
+				'wiggle': {
+					'0%, 100%': { transform: 'rotate(-1deg)' },
+					'50%': { transform: 'rotate(1deg)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'float': 'float 6s ease-in-out infinite',
-				'pulse-slow': 'pulse-slow 3s ease-in-out infinite'
+				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+				'bounce-light': 'bounce-light 2s ease-in-out infinite',
+				'wiggle': 'wiggle 2s ease-in-out infinite'
 			},
 			fontFamily: {
 				'sans': ['Nunito', 'sans-serif'],

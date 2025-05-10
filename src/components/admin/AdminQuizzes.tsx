@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import QuizBuilder from './QuizBuilder';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import LessonsList from './LessonsList';
 
 interface Lesson {
   id: string;
@@ -313,6 +313,11 @@ const AdminQuizzes = () => {
             )}
           </TableBody>
         </Table>
+      </div>
+
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold text-spaceteens-blue mb-4">All Lessons</h2>
+        <LessonsList />
       </div>
       
       <Dialog open={isQuizDialogOpen} onOpenChange={setIsQuizDialogOpen}>

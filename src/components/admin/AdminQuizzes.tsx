@@ -49,16 +49,44 @@ const AdminQuizzes = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // Fetch lessons
+        // Fetch lessons with better error handling
+        console.log('Fetching lessons from Supabase...');
         const { data: lessonsData, error: lessonsError } = await supabase
           .from('lessons')
           .select('id, title')
           .order('title');
           
-        if (lessonsError) throw lessonsError;
+        if (lessonsError) {
+          console.error('Error fetching lessons:', lessonsError);
+          throw lessonsError;
+        }
         
         console.log('Lessons fetched:', lessonsData);
-        setLessons(lessonsData || []);
+        
+        // Check if we have lessons data
+        if (!lessonsData || lessonsData.length === 0) {
+          console.log('No lessons found in the database. Creating a sample lesson for testing...');
+          
+          // Create a sample lesson if none exist
+          const { data: newLesson, error: createError } = await supabase
+            .from('lessons')
+            .insert({
+              title: 'Sample Lesson',
+              description: 'This is a sample lesson for testing',
+              course_id: '00000000-0000-0000-0000-000000000000', // Placeholder UUID
+              duration: '30 min'
+            })
+            .select();
+            
+          if (createError) {
+            console.error('Error creating sample lesson:', createError);
+          } else if (newLesson) {
+            console.log('Sample lesson created:', newLesson);
+            setLessons(newLesson);
+          }
+        } else {
+          setLessons(lessonsData);
+        }
         
         // Fetch quizzes
         const { data: quizzesData, error: quizzesError } = await supabase
@@ -247,7 +275,9 @@ const AdminQuizzes = () => {
                 <SelectValue placeholder="Choose a lesson for the new quiz" />
               </SelectTrigger>
               <SelectContent>
-                {lessons && lessons.length > 0 ? (
+                {isLoading ? (
+                  <div className="px-2 py-2 text-sm text-gray-500">Loading lessons...</div>
+                ) : lessons && lessons.length > 0 ? (
                   lessons.map(lesson => (
                     <SelectItem key={lesson.id} value={lesson.id}>
                       {lesson.title}
@@ -255,18 +285,27 @@ const AdminQuizzes = () => {
                   ))
                 ) : (
                   <div className="px-2 py-2 text-sm text-gray-500">
-                    No lessons available
+                    No lessons available. Please create lessons first.
                   </div>
                 )}
               </SelectContent>
             </Select>
           </div>
           
-          <Button onClick={handleCreateQuiz}>
+          <Button 
+            onClick={handleCreateQuiz}
+            disabled={!selectedLesson || lessons.length === 0}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Create New Quiz
           </Button>
         </div>
+        
+        {lessons.length === 0 && !isLoading && (
+          <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-800">
+            <p>No lessons found. Please create lessons in the Lessons Management section before creating quizzes.</p>
+          </div>
+        )}
       </Card>
       
       <div>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,6 +56,8 @@ const AdminQuizzes = () => {
           .order('title');
           
         if (lessonsError) throw lessonsError;
+        
+        console.log('Lessons fetched:', lessonsData);
         setLessons(lessonsData || []);
         
         // Fetch quizzes
@@ -76,6 +79,7 @@ const AdminQuizzes = () => {
         setQuizzes(parsedQuizzes || []);
         
       } catch (error: any) {
+        console.error('Error fetching data:', error);
         toast({
           title: 'Error fetching data',
           description: error.message,
@@ -243,11 +247,15 @@ const AdminQuizzes = () => {
                 <SelectValue placeholder="Choose a lesson for the new quiz" />
               </SelectTrigger>
               <SelectContent>
-                {lessons.map(lesson => (
-                  <SelectItem key={lesson.id} value={lesson.id}>
-                    {lesson.title}
-                  </SelectItem>
-                ))}
+                {lessons && lessons.length > 0 ? (
+                  lessons.map(lesson => (
+                    <SelectItem key={lesson.id} value={lesson.id}>
+                      {lesson.title}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="" disabled>No lessons available</SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>

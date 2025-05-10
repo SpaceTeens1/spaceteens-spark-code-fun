@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -62,31 +61,7 @@ const AdminQuizzes = () => {
         }
         
         console.log('Lessons fetched:', lessonsData);
-        
-        // Check if we have lessons data
-        if (!lessonsData || lessonsData.length === 0) {
-          console.log('No lessons found in the database. Creating a sample lesson for testing...');
-          
-          // Create a sample lesson if none exist
-          const { data: newLesson, error: createError } = await supabase
-            .from('lessons')
-            .insert({
-              title: 'Sample Lesson',
-              description: 'This is a sample lesson for testing',
-              course_id: '00000000-0000-0000-0000-000000000000', // Placeholder UUID
-              duration: '30 min'
-            })
-            .select();
-            
-          if (createError) {
-            console.error('Error creating sample lesson:', createError);
-          } else if (newLesson) {
-            console.log('Sample lesson created:', newLesson);
-            setLessons(newLesson);
-          }
-        } else {
-          setLessons(lessonsData);
-        }
+        setLessons(lessonsData || []);
         
         // Fetch quizzes
         const { data: quizzesData, error: quizzesError } = await supabase

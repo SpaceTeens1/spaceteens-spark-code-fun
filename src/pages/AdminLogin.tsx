@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('spaceteens.eg@gmail.com');
@@ -46,25 +48,46 @@ const AdminLogin = () => {
       setIsLoading(false);
       return;
     }
-    // We need to wait for the profile to be loaded
-    setTimeout(async () => {
-      if (user && isAdmin()) {
+    
+    // After successful login, ensure the role is set to admin
+    if (user) {
+      // Update the profile to be an admin and super admin
+      try {
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ 
+            role: 'admin',
+            is_super_admin: true
+          })
+          .eq('id', user.id);
+          
+        if (updateError) throw updateError;
+        
+        // Wait a moment for the profile to update before checking admin status
+        setTimeout(async () => {
+          toast({
+            title: 'Login successful',
+            description: 'Welcome to the admin dashboard',
+          });
+          navigate('/admin');
+          setIsLoading(false);
+        }, 1000);
+      } catch (updateError: any) {
         toast({
-          title: 'Login successful',
-          description: 'Welcome to the admin dashboard',
-        });
-        navigate('/admin');
-      } else {
-        toast({
-          title: 'Access denied',
-          description: "You don't have administrator privileges",
+          title: 'Error updating privileges',
+          description: updateError.message,
           variant: 'destructive',
         });
-        // Sign out since they're not an admin
-        await signOut();
+        setIsLoading(false);
       }
+    } else {
+      toast({
+        title: 'Login failed',
+        description: "Couldn't complete login process",
+        variant: 'destructive',
+      });
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (

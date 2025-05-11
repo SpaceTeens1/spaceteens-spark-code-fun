@@ -2,7 +2,7 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Rocket, Bot, Code, Brain, Planet, Star } from 'lucide-react';
+import { Sparkles, Rocket, Bot, Code, Brain, Plane, Star } from 'lucide-react';
 
 const CoursesSection = () => {
   const { t } = useLanguage();

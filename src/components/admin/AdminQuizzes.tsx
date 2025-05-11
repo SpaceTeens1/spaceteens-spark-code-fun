@@ -51,20 +51,7 @@ const AdminQuizzes = () => {
         // Fetch lessons with better error handling
         console.log('Fetching lessons from Supabase...');
         
-        // Check if the lessons table exists first
-        const { data: tablesData, error: tablesError } = await supabase
-          .from('pg_tables')
-          .select('tablename')
-          .eq('schemaname', 'public')
-          .eq('tablename', 'lessons');
-          
-        if (tablesError) {
-          console.error('Error checking if lessons table exists:', tablesError);
-        }
-        
-        console.log('Tables check result:', tablesData);
-        
-        // Fetch lessons
+        // Fetch lessons directly - removed the pg_tables check
         const { data: lessonsData, error: lessonsError } = await supabase
           .from('lessons')
           .select('id, title, course_id')

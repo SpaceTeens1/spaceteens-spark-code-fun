@@ -2,7 +2,7 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Rocket, Robot, Code, Brain } from 'lucide-react';
+import { Sparkles, Rocket, Bot, Code, Brain } from 'lucide-react';
 
 const CoursesSection = () => {
   const { t } = useLanguage();
@@ -13,7 +13,7 @@ const CoursesSection = () => {
       description: t('courses.robotics.description'),
       image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=500',
       alt: 'Robotics course image',
-      icon: <Robot className="h-6 w-6" />,
+      icon: <Bot className="h-6 w-6" />,
       color: 'border-spaceteens-orange'
     },
     {

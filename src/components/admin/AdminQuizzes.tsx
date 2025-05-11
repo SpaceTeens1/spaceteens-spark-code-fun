@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { useToast } from '@/components/ui/use-toast';
-import { Pencil, Trash2, Plus, BookOpen, Sparkles } from 'lucide-react';
+import { Pencil, Trash2, Plus, BookOpen, Sparkles, FileText } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import QuizBuilder from './QuizBuilder';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -378,7 +377,7 @@ const AdminQuizzes = () => {
               <TableRow>
                 <TableCell colSpan={4} className="text-center py-8">
                   <div className="flex flex-col items-center justify-center text-gray-500">
-                    <FileQuestion className="h-12 w-12 mb-2 text-spaceteens-lightblue/50" />
+                    <FileText className="h-12 w-12 mb-2 text-spaceteens-lightblue/50" />
                     <p>No quizzes found. Create your first quiz using the button above.</p>
                   </div>
                 </TableCell>

@@ -50,9 +50,24 @@ const AdminQuizzes = () => {
       try {
         // Fetch lessons with better error handling
         console.log('Fetching lessons from Supabase...');
+        
+        // Check if the lessons table exists first
+        const { data: tablesData, error: tablesError } = await supabase
+          .from('pg_tables')
+          .select('tablename')
+          .eq('schemaname', 'public')
+          .eq('tablename', 'lessons');
+          
+        if (tablesError) {
+          console.error('Error checking if lessons table exists:', tablesError);
+        }
+        
+        console.log('Tables check result:', tablesData);
+        
+        // Fetch lessons
         const { data: lessonsData, error: lessonsError } = await supabase
           .from('lessons')
-          .select('id, title')
+          .select('id, title, course_id')
           .order('title');
           
         if (lessonsError) {
@@ -62,6 +77,10 @@ const AdminQuizzes = () => {
         
         console.log('Lessons fetched:', lessonsData);
         setLessons(lessonsData || []);
+        
+        if (lessonsData && lessonsData.length > 0 && !selectedLesson) {
+          setSelectedLesson(lessonsData[0].id);
+        }
         
         // Fetch quizzes
         const { data: quizzesData, error: quizzesError } = await supabase
@@ -94,7 +113,7 @@ const AdminQuizzes = () => {
     };
     
     fetchData();
-  }, [toast]);
+  }, [toast, selectedLesson]);
 
   const handleCreateQuiz = () => {
     if (!selectedLesson) {
@@ -298,29 +317,30 @@ const AdminQuizzes = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Select Lesson
             </label>
-            <Select 
-              value={selectedLesson} 
-              onValueChange={setSelectedLesson}
-            >
-              <SelectTrigger className="rounded-xl border-spaceteens-lightblue/30">
-                <SelectValue placeholder="Choose a lesson for the new quiz" />
-              </SelectTrigger>
-              <SelectContent>
-                {isLoading ? (
-                  <div className="px-2 py-2 text-sm text-gray-500">Loading lessons...</div>
-                ) : lessons && lessons.length > 0 ? (
-                  lessons.map(lesson => (
+            {isLoading ? (
+              <div className="h-10 bg-gray-100 animate-pulse rounded-xl"></div>
+            ) : lessons.length > 0 ? (
+              <Select 
+                value={selectedLesson} 
+                onValueChange={setSelectedLesson}
+              >
+                <SelectTrigger className="rounded-xl border-spaceteens-lightblue/30">
+                  <SelectValue placeholder="Choose a lesson for the new quiz" />
+                </SelectTrigger>
+                <SelectContent>
+                  {lessons.map(lesson => (
                     <SelectItem key={lesson.id} value={lesson.id}>
                       {lesson.title}
                     </SelectItem>
-                  ))
-                ) : (
-                  <div className="px-2 py-2 text-sm text-gray-500">
-                    No lessons available. Please create lessons first.
-                  </div>
-                )}
-              </SelectContent>
-            </Select>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <div className="flex items-center space-x-2 bg-amber-50 p-3 rounded-xl">
+                <BookOpen className="h-4 w-4 text-amber-500" />
+                <span className="text-sm text-amber-800">No lessons available</span>
+              </div>
+            )}
           </div>
           
           <div className="flex gap-2">

@@ -32,6 +32,20 @@ const LessonsList = () => {
       try {
         console.log('Fetching lessons and courses from Supabase...');
 
+        // Fetch all courses first
+        const { data: coursesData, error: coursesError } = await supabase
+          .from('courses')
+          .select('id, title')
+          .order('title');
+          
+        if (coursesError) {
+          console.error('Error fetching courses:', coursesError);
+          throw coursesError;
+        }
+        
+        console.log('Raw courses data:', coursesData);
+        setCourses(coursesData || []);
+
         // Fetch all lessons
         const { data: lessonsData, error: lessonsError } = await supabase
           .from('lessons')
@@ -44,21 +58,7 @@ const LessonsList = () => {
         }
         
         console.log('Raw lessons data:', lessonsData);
-
-        // Fetch all courses for displaying course names
-        const { data: coursesData, error: coursesError } = await supabase
-          .from('courses')
-          .select('id, title')
-          .order('title');
-          
-        if (coursesError) {
-          console.error('Error fetching courses:', coursesError);
-          throw coursesError;
-        }
-        
-        console.log('Raw courses data:', coursesData);
         setLessons(lessonsData || []);
-        setCourses(coursesData || []);
       } catch (error: any) {
         console.error('Error in LessonsList:', error);
         toast({

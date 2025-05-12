@@ -246,8 +246,9 @@ export function BookingDialog({ triggerComponent }: BookingDialogProps) {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="bg-spaceteens-teal hover:bg-spaceteens-teal/90 w-full md:w-auto rounded-full transition-all duration-300 hover:-translate-y-1"
+                className="bg-spaceteens-orange hover:bg-spaceteens-orange/90 w-full md:w-auto rounded-full transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-spaceteens-orange/20"
               >
+                <Rocket className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 {isSubmitting ? t('booking.submitting') : t('booking.submit')}
               </Button>
             </DialogFooter>

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
+import { FireworksButton } from '@/components/FireworksButton';
 import { Globe, Menu, X, Rocket, Star, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BookingDialog } from '@/components/BookingDialog';
@@ -132,13 +133,13 @@ const Header = () => {
               </li>
               <li className="px-4 pt-2">
                 <BookingDialog triggerComponent={
-                  <Button 
+                  <FireworksButton 
                     className="w-full bg-spaceteens-orange hover:bg-orange-600 transition-colors duration-300 rounded-full group"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Rocket className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     {t('nav.bookNow')}
-                  </Button>
+                  </FireworksButton>
                 } />
               </li>
             </ul>

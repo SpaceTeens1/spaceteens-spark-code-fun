@@ -1,6 +1,6 @@
 
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Button } from '@/components/ui/button';
+import { FireworksButton } from '@/components/FireworksButton';
 import { Sparkles, Rocket, Star } from 'lucide-react';
 
 const HeroSection = () => {
@@ -12,10 +12,29 @@ const HeroSection = () => {
       <div className="absolute inset-0 w-full h-full">
         {/* Planets and stars */}
         <div className="absolute top-10 left-10 w-20 h-20 rounded-full bg-gradient-to-br from-spaceteens-orange to-spaceteens-yellow opacity-30 blur-sm"></div>
-        <div className="absolute bottom-40 right-20 w-32 h-32 rounded-full bg-gradient-to-br from-spaceteens-teal to-spaceteens-lightblue opacity-20 blur-sm"></div>
+        <div className="absolute bottom-40 right-20 w-32 h-32 rounded-full bg-gradient-to-br from-spaceteens-teal to-spaceteens-lightblue opacity-20 blur-sm animate-float"></div>
         <div className="absolute top-1/4 right-1/4 w-2 h-2 rounded-full bg-white shadow-lg shadow-white/50 animate-pulse-slow"></div>
         <div className="absolute bottom-1/4 left-1/3 w-1 h-1 rounded-full bg-white shadow-lg shadow-white/50 animate-pulse-slow"></div>
         <div className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full bg-white shadow-lg shadow-white/50 animate-pulse-slow"></div>
+        
+        {/* Animated rockets */}
+        <div className="absolute top-1/3 right-1/3 animate-float" style={{ animationDelay: "1.5s" }}>
+          <Rocket className="h-6 w-6 text-spaceteens-orange rotate-45" />
+        </div>
+        <div className="absolute bottom-1/4 left-1/4 animate-float" style={{ animationDelay: "3s" }}>
+          <Rocket className="h-4 w-4 text-spaceteens-orange -rotate-45" />
+        </div>
+        
+        {/* More stars */}
+        <div className="absolute top-32 left-1/2 animate-pulse-slow">
+          <Star className="h-3 w-3 text-white fill-white/80" />
+        </div>
+        <div className="absolute bottom-48 right-1/3 animate-pulse-slow" style={{ animationDelay: "2s" }}>
+          <Star className="h-2 w-2 text-white fill-white/80" />
+        </div>
+        <div className="absolute top-1/2 right-64 animate-pulse-slow" style={{ animationDelay: "1s" }}>
+          <Star className="h-4 w-4 text-white fill-white/80" />
+        </div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -33,10 +52,10 @@ const HeroSection = () => {
               {t('hero.subtitle')}
               <span className="absolute -right-4 top-0 text-2xl animate-bounce-light">✨</span>
             </p>
-            <Button className="bg-spaceteens-orange hover:bg-spaceteens-orange/90 transition-all duration-300 text-lg py-6 px-8 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1">
+            <FireworksButton className="bg-spaceteens-orange hover:bg-spaceteens-orange/90 transition-all duration-300 text-lg py-6 px-8 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1">
               <Rocket className="mr-2 h-5 w-5 animate-pulse-slow" />
               <a href="#courses">{t('nav.courses')}</a>
-            </Button>
+            </FireworksButton>
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="relative">

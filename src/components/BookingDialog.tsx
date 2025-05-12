@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 import { Button } from "@/components/ui/button";
+import { FireworksButton } from "@/components/FireworksButton";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
@@ -107,10 +108,10 @@ export function BookingDialog({ triggerComponent }: BookingDialogProps) {
         {triggerComponent ? (
           triggerComponent
         ) : (
-          <Button className="bg-spaceteens-orange hover:bg-spaceteens-orange/90 transition-all duration-300 shadow-lg hover:shadow-spaceteens-orange/20 hover:-translate-y-0.5 rounded-full">
+          <FireworksButton className="bg-spaceteens-orange hover:bg-spaceteens-orange/90 transition-all duration-300 shadow-lg hover:shadow-spaceteens-orange/20 hover:-translate-y-0.5 rounded-full">
             <Rocket className="mr-2 h-4 w-4" />
             {t('nav.bookNow')}
-          </Button>
+          </FireworksButton>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] bg-gradient-to-b from-white to-spaceteens-teal/5 backdrop-blur-sm border border-white/20 rounded-xl">
@@ -243,14 +244,14 @@ export function BookingDialog({ triggerComponent }: BookingDialogProps) {
             />
 
             <DialogFooter>
-              <Button 
+              <FireworksButton 
                 type="submit" 
                 disabled={isSubmitting}
                 className="bg-spaceteens-orange hover:bg-spaceteens-orange/90 w-full md:w-auto rounded-full transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-spaceteens-orange/20"
               >
                 <Rocket className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 {isSubmitting ? t('booking.submitting') : t('booking.submit')}
-              </Button>
+              </FireworksButton>
             </DialogFooter>
           </form>
         </Form>

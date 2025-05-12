@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Rocket, Planet, Star } from 'lucide-react';
+import { Rocket, Plane, Star } from 'lucide-react';
 
 const getRandomPosition = () => {
   return {
@@ -52,7 +52,7 @@ export const SpaceElements = () => {
       );
     }
     
-    // Create planets
+    // Create planets (using Plane icons styled as planets)
     for (let i = 0; i < 4; i++) {
       const colors = ['text-spaceteens-teal', 'text-spaceteens-orange', 'text-spaceteens-lightblue'];
       const colorClass = colors[Math.floor(Math.random() * colors.length)];

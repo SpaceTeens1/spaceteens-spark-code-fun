@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Globe, Menu, X, Rocket, Star, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { BookingDialog } from '@/components/BookingDialog';
 
 const Header = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -76,10 +77,7 @@ const Header = () => {
               </ul>
             </nav>
 
-            <Button className="bg-spaceteens-orange hover:bg-spaceteens-orange/90 transition-all duration-300 shadow-lg hover:shadow-spaceteens-orange/20 hover:-translate-y-0.5 rounded-full">
-              <Rocket className="mr-2 h-4 w-4" />
-              <a href="#contact">{t('nav.bookNow')}</a>
-            </Button>
+            <BookingDialog />
 
             <button 
               onClick={toggleLanguage}
@@ -133,13 +131,15 @@ const Header = () => {
                 </Link>
               </li>
               <li className="px-4 pt-2">
-                <Button 
-                  className="w-full bg-spaceteens-orange hover:bg-orange-600 transition-colors duration-300 rounded-full group"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Rocket className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  <a href="#contact">{t('nav.bookNow')}</a>
-                </Button>
+                <BookingDialog triggerComponent={
+                  <Button 
+                    className="w-full bg-spaceteens-orange hover:bg-orange-600 transition-colors duration-300 rounded-full group"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Rocket className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    {t('nav.bookNow')}
+                  </Button>
+                } />
               </li>
             </ul>
           </nav>
